@@ -1,0 +1,90 @@
+services:
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: timescaledb
+    restart: always
+    environment:
+      LOGSUSER_USER: ${LOGSUSER_USER}
+      LOGSUSER_PW: ${LOGSUSER_PW}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./db/init-user.sh:/docker-entrypoint-initdb.d/init-user.sh
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+
+  suricata-service:
+    build: ./suricata-service
+    container_name: suricata-service
+    env_file:
+    - .env
+    environment:
+      #SMB_PATH: "/mnt/suricata_logs" # Do we want to integrate smbv3 into the container as well as docker host?
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      - timescaledb
+    volumes:
+      - /mnt/suricata_logs:/mnt/suricata_logs:ro # Host smbv3 share where suricata eve.json logs are constantly updated
+      - ./suricata-service:/suricata-service
+      - suricata_node_modules:/suricata-service/node_modules
+    restart: unless-stopped
+
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "4000:4000"
+    env_file:
+    - .env
+    environment:
+      LOGSUSER_USER: ${LOGSUSER_USER}
+      LOGSUSER_PW: ${LOGSUSER_PW}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      - suricata-service
+    volumes:
+      - ./api-gateway:/api-gateway:ro
+      - apigateway_node_modules:/api-gateway/node_modules
+    restart: unless-stopped
+
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: ${REACT_APP_API_URL}
+    depends_on:
+      - api-gateway
+    volumes:
+      - ./frontend:/frontend
+      - frontend_node_modules:/frontend/node_modules
+    restart: unless-stopped
+
+
+volumes:
+  timescaledb_data:
+  suricata_node_modules:
+  apigateway_node_modules:
+  frontend_node_modules:
+

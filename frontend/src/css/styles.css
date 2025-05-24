@@ -1,0 +1,135 @@
+
+/* Reset */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: sans-serif;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar {
+  background: #222222b3;
+  color: #fff;
+  padding: 1rem;
+}
+
+
+/* Flex Wrap Gap */
+
+
+.toolbar-section {
+  padding: 1rem 0;
+  border-bottom: 1px solid #fff;
+  margin-bottom: 1rem;
+}
+
+.toolbar-section h5 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: #eee;
+}
+
+/* Base button style */
+.btn-toolbar {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s, color 0.3s;
+  box-shadow: none;
+}
+
+.btn-toolbar.active {
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.flex-wrap-gap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
+
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .dashboard {
+    flex-direction: row;
+  }
+
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    position: static;
+  }
+
+  .main-content {
+    flex: 1;
+    padding: 1rem;
+  }
+}
+
+/* Widgets container */
+.widgets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Individual widget box */
+.widget {
+  background: #f5f5f5;
+  padding: 1rem;
+  border-radius: 8px;
+  flex: 1 1 300px; /* Shrink/grow but have a minimum width */
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Eve Data Table Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.close-button {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "suricata-service",
+  "version": "1.0.0",
+  "description": "Suricata log storage and API using TimescaleDB",
+  "main": "processEveJSON.js",
+  "scripts": {
+    "start": "node processEveJSON.js",
+    "dev": "nodemon processEveJSON.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,8 @@
+LOGSUSER_USER=logsuser
+LOGSUSER_PW=password
+POSTGRES_USER=username
+POSTGRES_PASSWORD=userpass
+POSTGRES_DB=logs_db
+POSTGRES_HOST=timescaledb
+POSTGRES_PORT=5432
+REACT_APP_API_URL=http://docker_host_ip_address:4000
